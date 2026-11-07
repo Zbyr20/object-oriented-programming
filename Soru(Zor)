@@ -1,0 +1,103 @@
+Matris sınıfı: 2 boyutlu dizi, indeksleyici, + ve iki yönlü * operatörü, Yaz() metodu
+
+using System;
+class Matris
+{
+    private int[,] veri;
+
+    public Matris(int satir, int sutun)
+    {
+        veri= new int[satir,sutun];                       // ipucu: 2 boyutlu dizi nasıl new'lenir?
+    }
+
+    public int Satir => veri.GetLength(0);   // 0 = 1. boyut (satır)
+    public int Sutun => veri.GetLength(1);                 // 1 = 2. boyut (sütun)
+
+    public int this[int i, int j]            // iki boyutlu indeksleyici: iki parametre
+    {
+        get { 
+          return veri[i,j];
+        }
+        set { 
+         veri[i,j] = value;
+        }                          // 'value' kullanmayı unutma
+    }
+
+    public static Matris operator +(Matris a, Matris b)
+    {
+        // 1) Boyutlar farklıysa null döndür
+        if (a.Satir != b.Satir || a.Sutun != b.Sutun)
+        {
+            return null;
+        }
+        Matris sonuc = new Matris(a.Satir, a.Sutun);
+        // 2) Aynı boyutta yeni bir Matris oluştur
+        // 3) İç içe iki for ile her elemanı topla:  sonuc[i, j] = a[i, j] + b[i, j];
+        for(int i = 0; i<a.Satir; i++){
+            for(int j = 0; j<a.Sutun; j++)
+            {
+                sonuc[i,j] = a[i,j] + b[i,j];
+            }
+        }
+        // 4) sonucu döndür
+        return sonuc;
+    }
+
+    public static Matris operator *(Matris m, int k)
+    {
+        // + operatörüne benzer, ama her eleman k ile çarpılır[]
+        Matris sonuc = new Matris(m.Satir,m.Sutun);
+        for (int i = 0; i < m.Satir; i++)
+        {
+            for(int j = 0; j < m.Sutun; j++)
+            {
+                sonuc[i,j] = m[i,j] * k;
+            }
+        }
+        return sonuc;
+    }
+
+    public static Matris operator *(int k, Matris m)
+    {
+        return m*k;                       // tek satır: üstteki metodu çağır
+    }
+
+    public void Yaz()
+    {
+        // iç içe for: her satırın elemanlarını yan yana yaz, satır bitince alt satıra geç
+       for (int i = 0; i < Satir; i++)
+        {
+            for(int j = 0; j < Sutun; j++)
+            {
+                Console.WriteLine(veri[i,j]);
+            }
+        }
+    }
+}
+
+
+
+class Program
+{
+    public static void Main()
+    {
+        Matris a = new Matris(2,2);
+        a[0,0] = 1; a[0,1] = 2;
+        a[1,0] = 3; a[1,1] = 4;
+
+
+
+        Matris b = 2 * a;   // hangi operator* çağrılır? o da hangisini çağırır?
+        Matris c = a + b;
+        c.Yaz();
+    }
+
+}
+****************************************************************
+Kazanımlar
+-İki boyutlu dizileri tanımlama ve kullanma
+-Özellik(property) ile alan(field) farkı
+-Adlandırma kuralları
+-İki boyutlu indeksleyici
+-Operatöre aşırı yükleme
+-Derleyici hataları    
